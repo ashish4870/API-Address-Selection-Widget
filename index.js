@@ -1,12 +1,14 @@
-// server.js
 const express = require("express");
-const { statesData, citiesData } = require("./data"); // Import the data from data.js
+const { statesData, citiesData } = require("./data");
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
+
+const cors = require("cors");
+app.use(cors());
 
 app.get("/states", (req, res) => {
-  const term = req.query.term.toLowerCase();
+  const term = req.query.term ? req.query.term.toLowerCase() : "";
   const filteredStates = statesData.filter((state) =>
     state.displayName.toLowerCase().includes(term),
   );
@@ -15,7 +17,7 @@ app.get("/states", (req, res) => {
 
 app.get("/cities", (req, res) => {
   const stateId = parseInt(req.query.state);
-  const term = req.query.term.toLowerCase();
+  const term = req.query.term ? req.query.term.toLowerCase() : "";
   const filteredCities = (citiesData[stateId] || []).filter((city) =>
     city.displayName.toLowerCase().includes(term),
   );
